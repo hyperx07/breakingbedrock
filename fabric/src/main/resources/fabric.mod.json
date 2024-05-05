@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "breakingbedrock",
+  "version": "${version}",
+  "name": "${display_name}",
+  "description": "${description}",
+  "authors": [
+    "AnAwesomGuy"
+  ],
+  "contact": {
+    "homepage": "${github}",
+    "sources": "${github}",
+    "issues": "${github}/issues"
+  },
+  "license": "Apache License, Version 2.0",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "*",
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=20w12a"
+  }
+}
