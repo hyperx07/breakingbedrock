@@ -12,6 +12,24 @@ loom {
     forge {
         mixinConfig "${mod_id}.mixins.json"
     }
+
+    runs {
+        clientMixinDebug {
+            client()
+            ideConfigGenerated true
+            name = "Client Mixin Debug"
+            source sourceSets.main
+            property 'mixin.debug', 'true'
+        }
+
+        serverMixinDebug {
+            server()
+            ideConfigGenerated true
+            name = "Server Mixin Debug"
+            source sourceSets.main
+            property 'mixin.debug', 'true'
+        }
+    }
 }
 
 configurations {

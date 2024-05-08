@@ -8,6 +8,26 @@ architectury {
     fabric()
 }
 
+loom {
+    runs {
+        clientMixinDebug {
+            client()
+            ideConfigGenerated true
+            name = "Client Mixin Debug"
+            source sourceSets.main
+            property 'mixin.debug', 'true'
+        }
+
+        serverMixinDebug {
+            server()
+            ideConfigGenerated true
+            name = "Server Mixin Debug"
+            source sourceSets.main
+            property 'mixin.debug', 'true'
+        }
+    }
+}
+
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.

@@ -20,6 +20,6 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=20w12a"
+    "minecraft": ">=1.16-alpha.20.12.a"
   }
 }

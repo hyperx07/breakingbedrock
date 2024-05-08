@@ -7,6 +7,11 @@ architectury {
     minecraft = minecraft_version
 }
 
+version = mod_version
+
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
 subprojects {
     apply plugin: "dev.architectury.loom"
 
@@ -20,7 +25,7 @@ subprojects {
 
     processResources {
         def properties = [
-                version: project.version, mod_id: mod_id, description: description,
+                version: mod_version, mod_id: mod_id, description: description,
                 github: github, display_name: display_name
         ]
 
@@ -28,6 +33,17 @@ subprojects {
 
         filesMatching(["META-INF/mods.toml", "fabric.mod.json", "pack.mcmeta"]) {
             expand properties
+            filter {
+                it.empty ? null : it
+            }
+        }
+
+        doLast {
+            fileTree(dir: outputs.files.asPath).each {
+                var name = it.name
+                if (name.endsWith(".json") || name.endsWith(".mcmeta"))
+                    it.text = JsonOutput.toJson(new JsonSlurper().parse(it))
+            }
         }
     }
 }
