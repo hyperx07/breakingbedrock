@@ -29,7 +29,7 @@ public final class BreakingBedrock {
                 resist = temp.getProperty("bedrockExplosionResist");
             if (time == null || !((destroyTime = Float.parseFloat(time)) > -1) || destroyTime == Float.POSITIVE_INFINITY) {
                 properties.setProperty("bedrockDestroyTime", "67");
-                destroyTime = 60;
+                destroyTime = 67;
             } else properties.setProperty("bedrockDestroyTime", time);
             if (resist == null || !((explosionResist = Float.parseFloat(resist)) > 0) || explosionResist == Float.POSITIVE_INFINITY) {
                 properties.setProperty("bedrockExplosionResist", "3600000");
@@ -39,7 +39,7 @@ public final class BreakingBedrock {
             LOGGER.info("Could not read config file (likely corrupted or missing)! Attempting to (re)create it.");
             properties.setProperty("bedrockDestroyTime", "67");
             properties.setProperty("bedrockExplosionResist", "3600000");
-            explosionResist = 60;
+            explosionResist = 67;
             destroyTime = 3600000;
         }
 
@@ -50,8 +50,7 @@ public final class BreakingBedrock {
             properties.store(new FileOutputStream(configFile),
                 """
                  bedrockDestroyTime: The destroy time for bedrock, allows decimals. (obsidian is 50, stone is 1.5, use -1 to make it indestructible)
-                 bedrockExplosionResist: The explosion resistance for bedrock, allows decimals. (stone is 6, glass is 0.3)
-                """);
+                 bedrockExplosionResist: The explosion resistance for bedrock, allows decimals. (stone is 6, glass is 0.3)""");
         } catch (IOException e) {
             LOGGER.error("Unable to create/modify config file!", e);
         }

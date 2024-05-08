@@ -19,7 +19,6 @@
     "${mod_id}.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
     "minecraft": ">=1.16-alpha.20.12.a"
   }
 }
