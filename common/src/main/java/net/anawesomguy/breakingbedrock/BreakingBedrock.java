@@ -28,7 +28,7 @@ public final class BreakingBedrock {
             String time = temp.getProperty("bedrockDestroyTime"),
                 resist = temp.getProperty("bedrockExplosionResist");
             if (time == null || !((destroyTime = Float.parseFloat(time)) > -1) || destroyTime == Float.POSITIVE_INFINITY) {
-                properties.setProperty("bedrockDestroyTime", "60");
+                properties.setProperty("bedrockDestroyTime", "67");
                 destroyTime = 60;
             } else properties.setProperty("bedrockDestroyTime", time);
             if (resist == null || !((explosionResist = Float.parseFloat(resist)) > 0) || explosionResist == Float.POSITIVE_INFINITY) {
@@ -37,7 +37,7 @@ public final class BreakingBedrock {
             } else properties.setProperty("bedrockExplosionResist", resist);
         } catch (IOException | IllegalArgumentException e) {
             LOGGER.info("Could not read config file (likely corrupted or missing)! Attempting to (re)create it.");
-            properties.setProperty("bedrockDestroyTime", "60");
+            properties.setProperty("bedrockDestroyTime", "67");
             properties.setProperty("bedrockExplosionResist", "3600000");
             explosionResist = 60;
             destroyTime = 3600000;
