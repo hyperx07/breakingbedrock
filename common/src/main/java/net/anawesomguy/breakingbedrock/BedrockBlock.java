@@ -7,12 +7,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import static net.anawesomguy.breakingbedrock.BreakingBedrock.getBedrockDestroyTime;
-import static net.anawesomguy.breakingbedrock.BreakingBedrock.getBedrockExplosionResist;
-
 public class BedrockBlock extends Block {
     public BedrockBlock(Properties properties) {
-        super(properties.strength(getBedrockDestroyTime(), getBedrockExplosionResist()));
+        super(properties);
     }
 
     @Override @SuppressWarnings("deprecation")

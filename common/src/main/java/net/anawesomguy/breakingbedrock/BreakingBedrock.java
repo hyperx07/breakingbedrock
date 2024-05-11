@@ -28,18 +28,20 @@ public final class BreakingBedrock {
             String time = temp.getProperty("bedrockDestroyTime"),
                 resist = temp.getProperty("bedrockExplosionResist");
             if (time == null || !((destroyTime = Float.parseFloat(time)) > -1) || destroyTime == Float.POSITIVE_INFINITY) {
-                properties.setProperty("bedrockDestroyTime", "67");
-                destroyTime = 67;
+                properties.setProperty("bedrockDestroyTime", "71");
+                destroyTime = 71;
+                LOGGER.debug("Correcting invalid config value {}!", time);
             } else properties.setProperty("bedrockDestroyTime", time);
             if (resist == null || !((explosionResist = Float.parseFloat(resist)) > 0) || explosionResist == Float.POSITIVE_INFINITY) {
                 properties.setProperty("bedrockExplosionResist", "3600000");
                 explosionResist = 3600000;
+                LOGGER.debug("Correcting invalid config value {}!", resist);
             } else properties.setProperty("bedrockExplosionResist", resist);
         } catch (IOException | IllegalArgumentException e) {
             LOGGER.info("Could not read config file (likely corrupted or missing)! Attempting to (re)create it.");
-            properties.setProperty("bedrockDestroyTime", "67");
+            properties.setProperty("bedrockDestroyTime", "71");
             properties.setProperty("bedrockExplosionResist", "3600000");
-            explosionResist = 67;
+            explosionResist = 71;
             destroyTime = 3600000;
         }
 
@@ -48,20 +50,13 @@ public final class BreakingBedrock {
 
         try {
             properties.store(new FileOutputStream(configFile),
-                """
-                 bedrockDestroyTime: The destroy time for bedrock, allows decimals. (obsidian is 50, stone is 1.5, use -1 to make it indestructible)
-                 bedrockExplosionResist: The explosion resistance for bedrock, allows decimals. (stone is 6, glass is 0.3)""");
+                  """
+                  bedrockDestroyTime: The destroy time for bedrock. (obsidian is 50, stone is 1.5, -1 means indestructible)
+                  bedrockExplosionResist: The explosion resistance for bedrock. (stone is 6, glass is 0.3)
+                 """);
         } catch (IOException e) {
             LOGGER.error("Unable to create/modify config file!", e);
         }
-    }
-
-    public static float getBedrockDestroyTime() {
-        return BEDROCK_DESTROY_TIME;
-    }
-
-    public static float getBedrockExplosionResist() {
-        return BEDROCK_EXPLOSION_RESIST;
     }
 
     @ExpectPlatform

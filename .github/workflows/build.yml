@@ -10,7 +10,6 @@ jobs:
   build:
     strategy:
       matrix:
-        # Use these Java versions
         java: [
           21,    # Current Java LTS
         ]
@@ -29,27 +28,15 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
-      - name: Upload build artifacts (Common)
+      - name: Upload build artifacts
         continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-common-${{ github.sha }}
+          name: ${{ github.event.repository.name }}-artifacts-${{ github.sha }}
           path: |
             common/build/libs/*.jar
             !common/build/libs/*-transformProduction*.jar
-      - name: Upload build artifacts (Fabric)
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-fabric-${{ github.sha }}
-          path: |
             fabric/build/libs/*.jar
             !fabric/build/libs/*-dev*.jar
-      - name: Upload build artifacts (Forge)
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-forge-${{ github.sha }}
-          path: |
             forge/build/libs/*.jar
             !forge/build/libs/*-dev*.jar
