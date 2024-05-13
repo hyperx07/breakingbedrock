@@ -79,15 +79,19 @@ allprojects {
     }
 
     [jar, sourcesJar].each {
-        from 'LICENSE'
+        it.configure {
+            from 'LICENSE'
+        }
     }
 }
 
 publishMods {
     changelog = project.changelog
     type = STABLE
-    def forgeJar = project(":forge").remapJar, forgeSources = project(":forge").remapSourcesJar
-    def fabricJar = project(":fabric").remapJar, fabricSources = project(":fabric").remapSourcesJar
+    def fabricJar = project.provider { project(":fabric").remapJar }.flatMap { it.archiveFile }
+    def fabricSources = project.provider { project(":fabric").remapSourcesJar }.flatMap { it.archiveFile }
+    def forgeJar = project.provider { project(":forge").remapJar }.flatMap { it.archiveFile }
+    def forgeSources = project.provider { project(":forge").remapSourcesJar }.flatMap { it.archiveFile }
 
     def fabric = publishOptions {
         file = forgeJar
@@ -138,7 +142,7 @@ publishMods {
         minecraftVersionRange {
             start = "20w12a"
             end = "latest"
-            inclueSnapshots = true
+            includeSnapshots = true
         }
     }
 
@@ -151,6 +155,8 @@ publishMods {
     }
 
     github {
+        file = fabricJar
+        additionalFiles.from forgeJar, fabricSources, forgeSources
         accessToken = providers.environmentVariable('$GITHUB_TOKEN')
         repository = github
         commitish = "main"
