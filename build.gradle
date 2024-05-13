@@ -110,14 +110,14 @@ publishMods {
     def modrinthOptions = modrinthOptions {
         def token = providers.environmentVariable('$MODRINTH_TOKEN')
         accessToken = token
-        dryRun = token.present
+        dryRun = !token.present
         projectId = modrinth_id
     }
 
     def curseOptions = curseforgeOptions {
         def token = providers.environmentVariable('$CURSEFORGE_TOKEN')
         accessToken = token
-        dryRun = token.present
+        dryRun = !token.present
         projectId = curseforge_id
         clientRequired = true
         serverRequired = true
