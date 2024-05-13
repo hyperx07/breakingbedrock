@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "breakingbedrock",
+  "id": "${mod_id}",
   "version": "${version}",
   "name": "${display_name}",
   "description": "${description}",
@@ -8,11 +8,11 @@
     "AnAwesomGuy"
   ],
   "contact": {
-    "homepage": "${github}",
+    "homepage": "http://modrinth.com/mod/${modrinth_id}",
     "sources": "${github}",
     "issues": "${github}/issues"
   },
-  "license": "Apache License, Version 2.0",
+  "license": "Apache-2.0",
   "icon": "assets/${mod_id}/icon.png",
   "environment": "*",
   "mixins": [

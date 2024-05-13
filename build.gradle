@@ -1,6 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+    id "me.modmuss50.mod-publish-plugin" version "0.5.1"
 }
 
 architectury {
@@ -26,7 +27,8 @@ subprojects {
     processResources {
         def properties = [
                 version: mod_version, mod_id: mod_id, description: description,
-                github: github, display_name: display_name
+                github_repo: 'http://github.com/' + github, display_name: display_name,
+                modrinth_id: modrinth_id, curseforge_id: curseforge_id
         ]
 
         inputs.properties properties
@@ -74,5 +76,84 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+
+    [jar, sourcesJar].each {
+        from 'LICENSE'
+    }
+}
+
+publishMods {
+    changelog = project.changelog
+    type = STABLE
+    def forgeJar = project(":forge").remapJar, forgeSources = project(":forge").remapSourcesJar
+    def fabricJar = project(":fabric").remapJar, fabricSources = project(":fabric").remapSourcesJar
+
+    def fabric = publishOptions {
+        file = forgeJar
+        additionalFiles.from forgeSources
+        displayName = "[Fabric 1.16+] $display_name $mod_version"
+        modLoaders.addAll "fabric", "quilt"
+    }
+
+    def forge = publishOptions {
+        file = fabricJar
+        additionalFiles.from fabricSources
+        displayName = "[Forge 1.17+] $display_name $mod_version"
+        modLoaders.addAll "forge", "neoforge"
+    }
+
+    def modrinthOptions = modrinthOptions {
+        accessToken = providers.environmentVariable('$MODRINTH_TOKEN')
+        dryRun = accessToken.present
+        projectId = modrinth_id
+    }
+
+    def curseOptions = curseforgeOptions {
+        accessToken = providers.environmentVariable('$CURSEFORGE_TOKEN')
+        dryRun = accessToken.present
+        projectId = curseforge_id
+        clientRequired = true
+        serverRequired = true
+    }
+
+    curseforge("curseFabric") {
+        from curseOptions, fabric
+        minecraftVersionRange {
+            start = "1.16"
+            end = "latest"
+        }
+    }
+
+    curseforge("curseForge") {
+        from curseOptions, forge
+        minecraftVersionRange {
+            start = "1.17"
+            end = "latest"
+        }
+    }
+
+    modrinth("modrinthFabric") {
+        from modrinthOptions, fabric
+        minecraftVersionRange {
+            start = "20w12a"
+            end = "latest"
+            inclueSnapshots = true
+        }
+    }
+
+    modrinth("modrinthForge") {
+        from modrinthOptions, forge
+        minecraftVersionRange {
+            start = "1.17"
+            end = "latest"
+        }
+    }
+
+    github {
+        accessToken = providers.environmentVariable('$GITHUB_TOKEN')
+        repository = github
+        commitish = "main"
+        tagName = "release/" + mod_version
     }
 }

@@ -9,7 +9,7 @@ loom {
 }
 
 sourcesJar {
-    archiveClassifier += '-common'
+    archiveClassifier.set archiveClassifier.get() + '-common'
 }
 
 jar {
