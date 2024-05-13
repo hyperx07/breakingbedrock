@@ -108,16 +108,14 @@ publishMods {
     }
 
     def modrinthOptions = modrinthOptions {
-        def token = providers.environmentVariable('$MODRINTH_TOKEN')
-        accessToken = token
-        dryRun = !token.present
+        accessToken = providers.environmentVariable('$MODRINTH_TOKEN')
+        dryRun = !accessToken.present
         projectId = modrinth_id
     }
 
     def curseOptions = curseforgeOptions {
-        def token = providers.environmentVariable('$CURSEFORGE_TOKEN')
-        accessToken = token
-        dryRun = !token.present
+        accessToken = providers.environmentVariable('$CURSEFORGE_TOKEN')
+        dryRun = !accessToken.present
         projectId = curseforge_id
         clientRequired = true
         serverRequired = true
@@ -160,6 +158,7 @@ publishMods {
         file = fabricJar
         additionalFiles.from forgeJar, fabricSources, forgeSources
         accessToken = providers.environmentVariable('$GITHUB_TOKEN')
+        dryRun = !accessToken.present
         repository = github
         commitish = "main"
         tagName = "release/" + mod_version
