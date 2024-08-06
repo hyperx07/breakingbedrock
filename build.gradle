@@ -94,14 +94,14 @@ publishMods {
     def forgeSources = project.provider { project(":forge").remapSourcesJar }.flatMap { it.archiveFile }
 
     def fabric = publishOptions {
-        file = forgeJar
+        file = fabricJar
         additionalFiles.from forgeSources
         displayName = "[Fabric 1.16+] $display_name $mod_version"
         modLoaders.addAll "fabric", "quilt"
     }
 
     def forge = publishOptions {
-        file = fabricJar
+        file = forgeJar
         additionalFiles.from fabricSources
         displayName = "[Forge 1.17+] $display_name $mod_version"
         modLoaders.addAll "forge", "neoforge"
