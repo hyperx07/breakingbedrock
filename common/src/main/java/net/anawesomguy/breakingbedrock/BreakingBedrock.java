@@ -20,6 +20,7 @@ public final class BreakingBedrock {
     public static final int BEDROCK_MINING_TIER;
 
     static {
+        LOGGER.info("Initializing Breaking Bedrock.\nThis mod overwrites bedrock, and may cause broken functionality with any other mods that do the same!");
         Properties properties = new Properties();
         float destroyTime, explosionResist;
         int miningLevel;

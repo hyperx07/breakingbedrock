@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.gradleup.shadow" version "8.3.0"
 }
 
 architectury {
@@ -33,7 +33,7 @@ loom {
 
 configurations {
     common
-    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
+    shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
@@ -43,7 +43,19 @@ dependencies {
     forge "net.minecraftforge:forge:$minecraft_version-$forge_version"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
+}
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+build.dependsOn tasks.register("neoforgeJar", ShadowJar) {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+    relocate('net.minecraftforge', 'net.neoforged')
+
+    from sourceSets.main.output
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "neoforge"
 }
 
 shadowJar {

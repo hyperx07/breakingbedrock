@@ -1,19 +1,18 @@
 architectury {
-    common(enabled_platforms.split(","))
+    common enabled_platforms.split(",")
+    injectInjectables = false
 }
 
-loom {
-    mixin {
-        useLegacyMixinAp = false
-    }
-}
+loom.mixin.useLegacyMixinAp = false
 
 sourcesJar {
     archiveClassifier.set archiveClassifier.get() + '-common'
 }
 
 jar {
-    archiveClassifier.set('common')
+    archiveClassifier.set 'common'
+
+    manifest.attributes.clear()
 }
 
 dependencies {
