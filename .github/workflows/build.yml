@@ -13,7 +13,7 @@ jobs:
         java: [
           21,    # Current Java LTS
         ]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -34,8 +34,6 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-artifacts-${{ github.sha }}
           path: |
-            common/build/libs/*.jar
-            !common/build/libs/*-transformProduction*.jar
             fabric/build/libs/*.jar
             !fabric/build/libs/*-dev*.jar
             forge/build/libs/*.jar

@@ -46,16 +46,8 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 }
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
-build.dependsOn tasks.register("neoforgeJar", ShadowJar) {
-    exclude "fabric.mod.json"
-    exclude "architectury.common.json"
-    relocate('net.minecraftforge', 'net.neoforged')
-
-    from sourceSets.main.output
-    configurations = [project.configurations.shadowCommon]
-    archiveClassifier = "neoforge"
+processResources {
+    exclude "META-INF/neoforge.mods.toml"
 }
 
 shadowJar {
@@ -66,10 +58,33 @@ shadowJar {
     archiveClassifier = "dev-shadow"
 }
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+build.dependsOn tasks.register("neoforgeJar", ShadowJar) {
+    dependsOn jar
+
+    from(sourceSets.main.output) { exclude "META-INF/mods.toml" }
+    from(sourceSets.main.resources.matching(new PatternSet().include("META-INF/neoforge.mods.toml")).singleFile) {
+        rename { "META-INF/mods.toml" }
+        filter { it.empty ? null : it }
+
+        def props = rootProject.modProperties()
+        inputs.properties props
+        expand props
+    }
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "neoforge"
+
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+    relocate 'net.minecraftforge', 'net.neoforged'
+}
+
 remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set('forge')
+    archiveClassifier.set 'forge'
 }
 
 sourcesJar {

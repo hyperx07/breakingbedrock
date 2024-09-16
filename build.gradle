@@ -4,14 +4,20 @@ plugins {
     id "me.modmuss50.mod-publish-plugin" version "0.6.3"
 }
 
-architectury {
-    minecraft = minecraft_version
-}
+architectury.minecraft = minecraft_version
 
 version = mod_version + "+" + minecraft_version
 
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
+
+Map<String, String> modProperties() {
+    [
+            version: mod_version, mod_id: mod_id, description: project.properties.description,
+            github_repo: 'http://github.com/' + github, display_name: display_name,
+            modrinth_id: modrinth_id, curseforge_id: curseforge_id
+    ]
+}
 
 subprojects {
     apply plugin: "dev.architectury.loom"
@@ -25,26 +31,18 @@ subprojects {
     }
 
     processResources {
-        def properties = [
-                version: mod_version, mod_id: mod_id, description: description,
-                github_repo: 'http://github.com/' + github, display_name: display_name,
-                modrinth_id: modrinth_id, curseforge_id: curseforge_id
-        ]
+        def properties = modProperties()
 
         inputs.properties properties
 
-        filesMatching(["META-INF/mods.toml", "fabric.mod.json", "pack.mcmeta"]) {
+        filesMatching(["META-INF/*mods.toml", "fabric.mod.json", "pack.mcmeta"]) {
             expand properties
-            filter {
-                it.empty ? null : it
-            }
+            filter { it.empty ? null : it }
         }
 
         doLast {
-            fileTree(dir: outputs.files.asPath).each {
-                var name = it.name
-                if (name.endsWith(".json") || name.endsWith(".mcmeta"))
-                    it.text = JsonOutput.toJson(new JsonSlurper().parse(it))
+            fileTree(dir: outputs.files.asPath, includes: ["**/*.json", "**/*.mcmeta"]).each {
+                it.text = JsonOutput.toJson(new JsonSlurper().parse(it))
             }
         }
     }
@@ -55,9 +53,7 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    base {
-        archivesName = mod_id
-    }
+    base.archivesName = mod_id
 
     version = mod_version
     group = maven_group
@@ -74,14 +70,10 @@ allprojects {
         options.release = 17
     }
 
-    java {
-        withSourcesJar()
-    }
+    java.withSourcesJar()
 
-    [jar, sourcesJar].each {
-        it.configure {
-            from 'LICENSE'
-        }
+    [jar, sourcesJar]*.configure {
+        from 'LICENSE'
     }
 }
 
@@ -187,4 +179,9 @@ publishMods {
         commitish = "16-20.5"
         tagName = "release/" + version
     }
+}
+
+allprojects {
+    repositories.flatDir { dir rootProject.file('customLibs') }
+    architectury.transformerVersion = "5.2.9999"
 }

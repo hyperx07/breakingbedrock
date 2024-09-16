@@ -14,8 +14,8 @@ public class BedrockBlock extends Block {
 
     @Override @SuppressWarnings("deprecation")
     public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
-        return player.getInventory().getSelected().getItem() instanceof PickaxeItem item && item.getTier().getLevel() >= BreakingBedrock.BEDROCK_MINING_TIER ?
-               player.getDestroySpeed(state) / state.getDestroySpeed(level, pos) / 100F :
+        return player.getInventory().getSelected().getItem() instanceof PickaxeItem item && item.getTier().getLevel() >= BreakingBedrock.MINING_TIER ?
+               player.getDestroySpeed(state) / state.getDestroySpeed(level, pos) / 30 :
                0F;
     }
 }

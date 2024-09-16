@@ -1,9 +1,15 @@
+import dev.architectury.plugin.TransformingTask
+import dev.architectury.transformer.transformers.RemapInjectables
+
 architectury {
     common enabled_platforms.split(",")
-    injectInjectables = false
 }
 
-loom.mixin.useLegacyMixinAp = false
+//loom.mixin.useLegacyMixinAp = false // doesnt remap Block
+
+//tasks.withType(TransformingTask).configureEach {
+//    transformers.set transformers.get().findAll { !(it instanceof RemapInjectables) }
+//}
 
 sourcesJar {
     archiveClassifier.set archiveClassifier.get() + '-common'
@@ -11,7 +17,6 @@ sourcesJar {
 
 jar {
     archiveClassifier.set 'common'
-
     manifest.attributes.clear()
 }
 

@@ -1,5 +1,5 @@
 modLoader="lowcodefml"
-loaderVersion="[37,)"
+loaderVersion="[37,51)"
 license="Apache-2.0"
 issueTrackerURL="${github_repo}/issues"
 
@@ -13,11 +13,6 @@ logoFile="assets/${mod_id}/icon.png"
 displayURL="http://modrinth.com/mod/${modrinth_id}"
 
 [[dependencies.${mod_id}]]
-modId="forge"
-mandatory=true
-versionRange="[37,)"
-
-[[dependencies.${mod_id}]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.17,)"
+versionRange="(,1.20.5)"

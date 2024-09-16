@@ -15,12 +15,12 @@ public final class BreakingBedrock {
     public static final String MOD_ID = "breakingbedrock";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final float BEDROCK_DESTROY_TIME;
-    public static final float BEDROCK_EXPLOSION_RESIST;
-    public static final int BEDROCK_MINING_TIER;
+    public static final float DESTROY_TIME;
+    public static final float EXPLOSION_RESIST;
+    public static final int MINING_TIER;
 
     static {
-        LOGGER.info("Initializing Breaking Bedrock.\nThis mod overwrites bedrock, and may cause broken functionality with any other mods that do the same!");
+        LOGGER.info("Initializing Breaking Bedrock. This mod overwrites bedrock, and may break with other mods that do the same!");
         Properties properties = new Properties();
         float destroyTime, explosionResist;
         int miningLevel;
@@ -28,48 +28,50 @@ public final class BreakingBedrock {
         try {
             Properties temp = new Properties();
             temp.load(new FileInputStream(configFile));
-            String time = temp.getProperty("bedrockDestroyTime"),
-                   resist = temp.getProperty("bedrockExplosionResist"),
-                   level = temp.getProperty("bedrockMiningTier");
+            String time = temp.getProperty("destroy_time"),
+                   resist = temp.getProperty("explosion_resist"),
+                   level = temp.getProperty("mining_level");
             if (time == null || !((destroyTime = Float.parseFloat(time)) > -1) || destroyTime == Float.POSITIVE_INFINITY) {
-                properties.setProperty("bedrockDestroyTime", "71");
-                destroyTime = 71F;
+                properties.setProperty("destroy_time", "100");
+                destroyTime = 100F;
                 LOGGER.debug("Correcting invalid config value {}!", time);
-            } else properties.setProperty("bedrockDestroyTime", time);
+            } else properties.setProperty("destroy_time", time);
             if (resist == null || !((explosionResist = Float.parseFloat(resist)) > 0) || explosionResist == Float.POSITIVE_INFINITY) {
-                properties.setProperty("bedrockExplosionResist", "3600000");
+                properties.setProperty("explosion_resist", "3600000");
                 explosionResist = 3600000F;
                 LOGGER.debug("Correcting invalid config value {}!", resist);
-            } else properties.setProperty("bedrockExplosionResist", resist);
+            } else properties.setProperty("explosion_resist", resist);
             if (level == null || !((miningLevel = Integer.parseInt(level)) > 0)) {
-                properties.setProperty("bedrockMiningLevel", "4");
+                properties.setProperty("mining_level", "4");
                 miningLevel = 4;
                 LOGGER.debug("Correcting invalid config value {}!", level);
-            } else properties.setProperty("bedrockMiningLevel", resist);
+            } else properties.setProperty("mining_level", resist);
         } catch (IOException | IllegalArgumentException e) {
-            LOGGER.info("Could not read config file (likely corrupted or missing)! Attempting to (re)create it.");
-            properties.setProperty("bedrockDestroyTime", "71");
-            properties.setProperty("bedrockExplosionResist", "3600000");
-            properties.setProperty("bedrockMiningLevel", "4");
-            explosionResist = 71F;
-            destroyTime = 3600000F;
+            LOGGER.info("Couldn't read config file (likely corrupted or missing)! Attempting to (re)create it.");
+            properties.setProperty("destroy_time", "100");
+            properties.setProperty("explosion_resist", "3600000");
+            properties.setProperty("mining_level", "4");
+            destroyTime = 100F;
+            explosionResist = 3600000F;
             miningLevel = 4;
         }
 
-        BEDROCK_EXPLOSION_RESIST = explosionResist;
-        BEDROCK_DESTROY_TIME = destroyTime;
-        BEDROCK_MINING_TIER = miningLevel;
+        EXPLOSION_RESIST = explosionResist;
+        DESTROY_TIME = destroyTime;
+        MINING_TIER = miningLevel;
 
         try {
             properties.store(new FileOutputStream(configFile),
                   """
-                  bedrockDestroyTime: The destroy time for bedrock. (obsidian is 50, stone is 1.5, -1 means indestructible)
-                  bedrockExplosionResist: The explosion resistance for bedrock. (stone is 6, glass is 0.3)
-                  bedrockExplosionResist: The mining level required to mine bedrock. (netherite is 4)
+                  destroy_time: The destroy time for bedrock. (obsidian is 50, stone is 1.5, -1 is indestructible)
+                  explosion_resist: The explosion resistance for bedrock. (stone is 6, glass is 0.3)
+                  mining_level: The mining level required to mine bedrock. (netherite is 4)
                  """);
         } catch (IOException e) {
             LOGGER.error("Unable to create/modify config file!", e);
         }
+
+        LOGGER.debug("Config initialized with values: destroyTime={}, explosionResist={}, miningLevel={}", destroyTime, explosionResist, miningLevel);
     }
 
     @ExpectPlatform
