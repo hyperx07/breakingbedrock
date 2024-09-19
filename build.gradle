@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
-    id "me.modmuss50.mod-publish-plugin" version "0.6.3"
+    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 }
 
 architectury.minecraft = minecraft_version
@@ -102,7 +102,6 @@ publishMods {
 
     def neo = publishOptions {
         file = neoJar
-        additionalFiles.from forgeSources
         displayName = "[NeoForge 1.20.2-.4] $display_name $version"
         modLoaders.add "neoforge"
     }
@@ -137,7 +136,7 @@ publishMods {
         }
     }
 
-    curseforge("curseForge") {
+    curseforge("curseNeo") {
         from curseOptions, neo
         minecraftVersionRange {
             start = "1.20.2"
@@ -171,17 +170,11 @@ publishMods {
     }
 
     github {
-        file = fabricJar
-        additionalFiles.from forgeJar, fabricSources, forgeSources
+        additionalFiles.from fabricJar, forgeJar, neoJar, fabricSources, forgeSources
         accessToken = providers.environmentVariable('GITHUB_TOKEN')
         dryRun = !accessToken.present
         repository = github
         commitish = "16-20.5"
         tagName = "release/" + version
     }
-}
-
-allprojects {
-    repositories.flatDir { dir rootProject.file('customLibs') }
-    architectury.transformerVersion = "5.2.9999"
 }
