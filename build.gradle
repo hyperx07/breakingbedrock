@@ -55,7 +55,7 @@ allprojects {
 
     base.archivesName = mod_id
 
-    version = mod_version
+    version = mod_version + "+" + minecraft_version
     group = maven_group
 
     repositories {
@@ -90,20 +90,20 @@ publishMods {
     def fabric = publishOptions {
         file = fabricJar
         additionalFiles.from forgeSources
-        displayName = "[Fabric 1.16-1.20.4] $display_name $project.version"
+        displayName = "[Fabric 1.16-1.20.4] $display_name $version"
         modLoaders.addAll "fabric", "quilt"
     }
 
     def forge = publishOptions {
         file = forgeJar
         additionalFiles.from fabricSources
-        displayName = "[Forge 1.17-1.20.4] $display_name $project.version"
+        displayName = "[Forge 1.17-1.20.4] $display_name $version"
         modLoaders.add "forge"
     }
 
     def neo = publishOptions {
         file = neoJar
-        displayName = "[NeoForge 1.20.2-.4] $display_name $project.mod_version+1.20.4"
+        displayName = "[NeoForge 1.20.2-.4] $display_name $mod_version+1.20.4"
         modLoaders.add "neoforge"
     }
 
@@ -176,6 +176,6 @@ publishMods {
         dryRun = !accessToken.present
         repository = github
         commitish = "16-20.5"
-        tagName = project.version
+        tagName = version
     }
 }
