@@ -8,16 +8,16 @@ architectury.minecraft = minecraft_version
 
 version = (mod_version + "+" + minecraft_version)
 
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
-
 Map<String, String> modProperties() {
     [
             version: mod_version, mod_id: mod_id, description: project.properties.description,
             github_repo: 'http://github.com/' + github, display_name: display_name,
-            modrinth_id: modrinth_id, curseforge_id: curseforge_id
+            modrinth_id: modrinth_id, curseforge_id: curseforge_id,
     ]
 }
+
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
 
 subprojects {
     apply plugin: "dev.architectury.loom"
@@ -84,7 +84,7 @@ publishMods {
     def fabricJar = project.provider { project(":fabric").remapJar }.flatMap { it.archiveFile }
     def fabricSources = project.provider { project(":fabric").remapSourcesJar }.flatMap { it.archiveFile }
     def forgeJar = project.provider { project(":forge").remapJar }.flatMap { it.archiveFile }
-    def neoJar = project.provider { project(":forge").shadowJar }.flatMap { it.archiveFile }
+    def neoJar = project.provider { project(":forge").neoforgeJar }.flatMap { it.archiveFile }
     def forgeSources = project.provider { project(":forge").remapSourcesJar }.flatMap { it.archiveFile }
 
     def fabric = publishOptions {
