@@ -4,7 +4,7 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
-    fabric()
+    neoForge()
 }
 
 loom {
@@ -40,15 +40,26 @@ configurations {
     }
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
+    developmentNeoForge.extendsFrom common
+}
+
+repositories {
+    maven { url 'https://maven.neoforged.net/releases/' }
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
-//    modImplementation "net.fabricmc.fabric-api:fabric-api:$fabric_api_version"
+    neoForge "net.neoforged:neoforge:$neoforge_version"
+
+    def forgeVer = "$minecraft_version-$forge_version"
+    compileOnly("net.minecraftforge:fmlloader:$forgeVer") { transitive false }
+//    compileOnly("net.minecraftforge:forge:$forgeVer:universal") { transitive false }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric"))
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
+}
+
+tasks.withType(Jar).configureEach {
+    manifest.attributes.put 'MixinConfigs', mod_id + '.mixins.json'
 }
 
 shadowJar {
@@ -57,17 +68,16 @@ shadowJar {
 }
 
 remapJar {
-    injectAccessWidener = true
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set('fabric')
+    archiveClassifier.set 'neoforge'
 }
 
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-    archiveClassifier.set archiveClassifier.get() + '-fabric'
+    archiveClassifier.set archiveClassifier.get() + '-neoforge'
 }
 
 components.java {

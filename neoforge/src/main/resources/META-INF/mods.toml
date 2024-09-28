@@ -1,5 +1,5 @@
 modLoader="lowcodefml"
-loaderVersion="[37,51)"
+loaderVersion="[50,)"
 license="Apache-2.0"
 issueTrackerURL="${github_repo}/issues"
 
@@ -15,4 +15,4 @@ displayURL="http://modrinth.com/mod/${modrinth_id}"
 [[dependencies.${mod_id}]]
 modId="minecraft"
 mandatory=true
-versionRange="(,1.20.5)"
+versionRange="[1.20.5,)"

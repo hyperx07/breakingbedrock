@@ -2,6 +2,7 @@ plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
     id "me.modmuss50.mod-publish-plugin" version "0.7.4"
+    id "com.github.johnrengelman.shadow" version "8.1.+" apply false
 }
 
 architectury.minecraft = minecraft_version
@@ -26,7 +27,7 @@ subprojects {
         minecraft "com.mojang:minecraft:$minecraft_version"
         mappings loom.layered() {
             officialMojangMappings()
-            parchment "org.parchmentmc.data:parchment-$minecraft_version:2023.09.03@zip"
+            parchment "org.parchmentmc.data:parchment-1.21:2024.07.28@zip"
         }
     }
 
@@ -67,7 +68,7 @@ allprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release = 21
     }
 
     java.withSourcesJar()
@@ -83,28 +84,21 @@ publishMods {
     type = STABLE
     def fabricJar = project.provider { project(":fabric").remapJar }.flatMap { it.archiveFile }
     def fabricSources = project.provider { project(":fabric").remapSourcesJar }.flatMap { it.archiveFile }
-    def forgeJar = project.provider { project(":forge").remapJar }.flatMap { it.archiveFile }
-    def neoJar = project.provider { project(":forge").neoforgeJar }.flatMap { it.archiveFile }
-    def forgeSources = project.provider { project(":forge").remapSourcesJar }.flatMap { it.archiveFile }
+    def neoForgeJar = project.provider { project(":neoforge").remapJar }.flatMap { it.archiveFile }
+    def neoForgeSources = project.provider { project(":neoforge").remapSourcesJar }.flatMap { it.archiveFile }
 
     def fabric = publishOptions {
         file = fabricJar
-        additionalFiles.from forgeSources
-        displayName = "[Fabric 1.16-1.20.4] $display_name $version"
+        additionalFiles.from fabricSources
+        displayName = "[Fabric 1.20.5+] $display_name $version"
         modLoaders.addAll "fabric", "quilt"
     }
 
-    def forge = publishOptions {
-        file = forgeJar
-        additionalFiles.from fabricSources
-        displayName = "[Forge 1.17-1.20.4] $display_name $version"
+    def neoForge = publishOptions {
+        file = neoForgeJar
+        additionalFiles.from neoForgeSources
+        displayName = "[Neo(Forge) 1.20.5+] $display_name $version"
         modLoaders.add "forge"
-    }
-
-    def neo = publishOptions {
-        file = neoJar
-        displayName = "[NeoForge 1.20.2-.4] $display_name $mod_version+1.20.4"
-        modLoaders.add "neoforge"
     }
 
     def modrinthOptions = modrinthOptions {
@@ -124,58 +118,42 @@ publishMods {
     curseforge("curseFabric") {
         from curseOptions, fabric
         minecraftVersionRange {
-            start = "1.16"
-            end = "1.20.4"
+            start = "1.20.5"
+            end = "latest"
         }
     }
 
-    curseforge("curseForge") {
-        from curseOptions, forge
+    curseforge("curseNeoForge") {
+        from curseOptions, neoForge
         minecraftVersionRange {
-            start = "1.17"
-            end = "1.20.4"
-        }
-    }
-
-    curseforge("curseNeo") {
-        from curseOptions, neo
-        minecraftVersionRange {
-            start = "1.20.2"
-            end = "1.20.4"
+            start = "1.20.5"
+            end = "latest"
         }
     }
 
     modrinth("modrinthFabric") {
         from modrinthOptions, fabric
         minecraftVersionRange {
-            start = "20w12a"
-            end = "24w11a"
+            start = "24w12a"
+            end = "latest"
             includeSnapshots = true
         }
     }
 
-    modrinth("modrinthForge") {
-        from modrinthOptions, forge
+    modrinth("modrinthNeoForge") {
+        from modrinthOptions, neoForge
         minecraftVersionRange {
-            start = "1.17"
-            end = "1.20.4"
-        }
-    }
-
-    modrinth("modrinthNeo") {
-        from modrinthOptions, neo
-        minecraftVersionRange {
-            start = "1.20.2"
-            end = "1.20.4"
+            start = "1.20.5"
+            end = "latest"
         }
     }
 
     github {
-        additionalFiles.from fabricJar, forgeJar, neoJar, fabricSources, forgeSources
+        additionalFiles.from fabricJar, neoForgeJar, fabricSources, neoForgeSources
         accessToken = providers.environmentVariable('GITHUB_TOKEN')
         dryRun = !accessToken.present
         repository = github
-        commitish = "16-20.5"
+        commitish = "20.5+"
         tagName = version
     }
 }
