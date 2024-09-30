@@ -55,7 +55,11 @@ dependencies {
 //    compileOnly("net.minecraftforge:forge:$forgeVer:universal") { transitive false }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge"))
+
+    modLocalRuntime "maven.modrinth:modernfix:18tAoFs1"
+    modLocalRuntime "maven.modrinth:ferrite-core:BkJB5PPB"
+//    modLocalRuntime "maven.modrinth:sodium:$sodium_version-neoforge" // crashes
 }
 
 tasks.withType(Jar).configureEach {

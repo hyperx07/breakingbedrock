@@ -2,6 +2,7 @@ modLoader="lowcodefml"
 loaderVersion="[1.0,)"
 license="Apache-2.0"
 issueTrackerURL="${github_repo}/issues"
+logoFile="assets/${mod_id}/icon.png"
 
 [[mods]]
 modId="${mod_id}"
@@ -9,7 +10,6 @@ version="${version}"
 displayName="${display_name}"
 authors="AnAwesomGuy"
 description="${description}"
-logoFile="assets/${mod_id}/icon.png"
 displayURL="http://modrinth.com/mod/${modrinth_id}"
 
 [[mixins]]

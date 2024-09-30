@@ -17,8 +17,8 @@ Map<String, String> modProperties() {
     ]
 }
 
-import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 subprojects {
     apply plugin: "dev.architectury.loom"
@@ -33,7 +33,6 @@ subprojects {
 
     processResources {
         def properties = modProperties()
-
         inputs.properties properties
 
         filesMatching(["META-INF/*mods.toml", "fabric.mod.json", "pack.mcmeta"]) {
@@ -46,6 +45,10 @@ subprojects {
                 it.text = JsonOutput.toJson(new JsonSlurper().parse(it))
             }
         }
+    }
+
+    tasks.withType(Jar).configureEach {
+        exclude "architectury_inject*/PlatformMethods.class"
     }
 }
 
@@ -63,6 +66,17 @@ allprojects {
         maven {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org'
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = "https://api.modrinth.com/maven"
+                }
+            }
+            filter {
+                includeGroup "maven.modrinth"
+            }
         }
     }
 
