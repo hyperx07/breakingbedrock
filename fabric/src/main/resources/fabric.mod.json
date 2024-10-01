@@ -19,6 +19,6 @@
     "${mod_id}.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.16-alpha.20.12.a <=1.20.5-alpha.24.13.a"
+    "minecraft": ">=1.16-alpha.20.12.a <1.20.5-alpha.24.12.a"
   }
 }

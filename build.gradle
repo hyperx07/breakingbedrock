@@ -2,11 +2,10 @@ plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
     id "me.modmuss50.mod-publish-plugin" version "0.7.4"
+    id "com.github.johnrengelman.shadow" version "8.1.1" apply false
 }
 
 architectury.minecraft = minecraft_version
-
-version = (mod_version + "+" + minecraft_version)
 
 Map<String, String> modProperties() {
     [
@@ -175,7 +174,7 @@ publishMods {
         accessToken = providers.environmentVariable('GITHUB_TOKEN')
         dryRun = !accessToken.present
         repository = github
-        commitish = "16-20.5"
+        commitish = "16-20.4"
         tagName = version
     }
 }

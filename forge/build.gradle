@@ -1,5 +1,5 @@
 plugins {
-    id "com.gradleup.shadow" version "8.3.0"
+    id "com.github.johnrengelman.shadow"
 }
 
 architectury {
@@ -13,27 +13,35 @@ loom {
     }
 
     runs {
-        clientMixinDebug {
+        clientDebug {
             client()
             ideConfigGenerated true
-            name = "Client Mixin Debug"
+            name = "Minecraft Client Debug"
             source sourceSets.main
             property 'mixin.debug', 'true'
+            property "fabric.log.level", "debug"
         }
 
-        serverMixinDebug {
+        serverDebug {
             server()
             ideConfigGenerated true
-            name = "Server Mixin Debug"
+            name = "Minecraft Server Debug"
             source sourceSets.main
             property 'mixin.debug', 'true'
+            property "fabric.log.level", "debug"
         }
     }
 }
 
 configurations {
-    common
-    shadowCommon
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    shadowCommon {
+        canBeResolved = true
+        canBeConsumed = false
+    }
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
@@ -43,7 +51,7 @@ dependencies {
     forge "net.minecraftforge:forge:$minecraft_version-$forge_version"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge"))
 }
 
 processResources {
@@ -51,9 +59,6 @@ processResources {
 }
 
 shadowJar {
-    exclude "fabric.mod.json"
-    exclude "architectury.common.json"
-
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
 }
