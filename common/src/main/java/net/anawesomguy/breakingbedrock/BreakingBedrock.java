@@ -45,7 +45,7 @@ public final class BreakingBedrock {
                 properties.setProperty("mining_level", "4");
                 miningLevel = 4;
                 LOGGER.debug("Correcting invalid config value {}!", level);
-            } else properties.setProperty("mining_level", resist);
+            } else properties.setProperty("mining_level", level);
         } catch (IOException | IllegalArgumentException e) {
             LOGGER.info("Couldn't read config file (likely corrupted or missing)! Attempting to (re)create it.");
             properties.setProperty("destroy_time", "100");
