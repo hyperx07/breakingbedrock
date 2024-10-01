@@ -91,7 +91,6 @@ allprojects {
 }
 
 publishMods {
-    version = project.version
     changelog = project.changelog
     type = STABLE
     def fabricJar = project.provider { project(":fabric").remapJar }.flatMap { it.archiveFile }
