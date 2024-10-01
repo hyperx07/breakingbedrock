@@ -7,8 +7,6 @@ plugins {
 
 architectury.minecraft = minecraft_version
 
-version = (mod_version + "+" + minecraft_version)
-
 Map<String, String> modProperties() {
     [
             version: mod_version, mod_id: mod_id, description: project.properties.description,
@@ -17,8 +15,8 @@ Map<String, String> modProperties() {
     ]
 }
 
-import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
 
 subprojects {
     apply plugin: "dev.architectury.loom"
@@ -104,15 +102,17 @@ publishMods {
     def fabric = publishOptions {
         file = fabricJar
         additionalFiles.from fabricSources
-        displayName = "[Fabric 1.20.5+] $display_name $version"
+        version = project.version + "-fabric"
+        displayName = "[Fabric 1.20.5+] $display_name $project.version"
         modLoaders.addAll "fabric", "quilt"
     }
 
     def neoForge = publishOptions {
         file = neoForgeJar
         additionalFiles.from neoForgeSources
-        displayName = "[Neo(Forge) 1.20.5+] $display_name $version"
-        modLoaders.add "forge"
+        version = project.version + "-fabric"
+        displayName = "[(Neo)Forge 1.20.5+] $display_name $mod_version+1.20.4"
+        modLoaders.add "neoforge"
     }
 
     def modrinthOptions = modrinthOptions {
@@ -168,6 +168,6 @@ publishMods {
         dryRun = !accessToken.present
         repository = github
         commitish = "20.5+"
-        tagName = version
+        tagName = project.version
     }
 }

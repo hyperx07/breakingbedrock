@@ -34,7 +34,7 @@ configurations {
         canBeResolved = true
         canBeConsumed = false
     }
-    shadowCommon { // don't use shadow from the shadow plugin since it *excludes* files.
+    shadowCommon {
         canBeResolved = true
         canBeConsumed = false
     }
