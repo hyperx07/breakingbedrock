@@ -80,9 +80,7 @@ build.dependsOn tasks.register("neoforgeJar", ShadowJar) {
 
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "neoforge"
-
-    exclude "fabric.mod.json"
-    exclude "architectury.common.json"
+    archiveVersion = project.mod_version + "+1.20.4-neoforge"
     relocate 'net.minecraftforge', 'net.neoforged'
 }
 

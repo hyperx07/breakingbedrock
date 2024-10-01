@@ -89,20 +89,23 @@ publishMods {
     def fabric = publishOptions {
         file = fabricJar
         additionalFiles.from forgeSources
-        displayName = "[Fabric 1.16-1.20.4] $display_name $version"
+        version = project.version + "-fabric"
+        displayName = "[Fabric 1.16-1.20.4] $display_name $project.version"
         modLoaders.addAll "fabric", "quilt"
     }
 
     def forge = publishOptions {
         file = forgeJar
         additionalFiles.from fabricSources
+        version = project.version + "-forge"
         displayName = "[Forge 1.17-1.20.4] $display_name $version"
         modLoaders.add "forge"
     }
 
     def neo = publishOptions {
         file = neoJar
-        displayName = "[NeoForge 1.20.2-.4] $display_name $mod_version+1.20.4"
+        version = project.mod_version + "+1.20.4-neoforge"
+        displayName = "[NeoForge 1.20.2-.4] $display_name $version"
         modLoaders.add "neoforge"
     }
 
@@ -110,6 +113,7 @@ publishMods {
         accessToken = providers.environmentVariable('MODRINTH_TOKEN')
         dryRun = !accessToken.present
         projectId = modrinth_id
+        version
     }
 
     def curseOptions = curseforgeOptions {
@@ -175,6 +179,6 @@ publishMods {
         dryRun = !accessToken.present
         repository = github
         commitish = "16-20.4"
-        tagName = version
+        tagName = project.version
     }
 }
