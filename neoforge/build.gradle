@@ -82,9 +82,6 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-    println archiveClassifier.get()
-    archiveAppendix.set 'fabric'
-    println archiveFileName.get()
 }
 
 components.java {
