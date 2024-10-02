@@ -61,6 +61,8 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
+    destinationDirectory.set destinationDirectory.dir('../devlibs').get()
+    exclude "architectury_inject*/**"
 }
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
@@ -87,14 +89,12 @@ build.dependsOn tasks.register("neoforgeJar", ShadowJar) {
 remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set 'forge'
 }
 
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-    archiveClassifier.set archiveClassifier.get() + '-forge'
 }
 
 components.java {

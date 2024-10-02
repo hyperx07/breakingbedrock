@@ -1,11 +1,9 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
-    id "me.modmuss50.mod-publish-plugin" version "0.7.4" apply false
+    id "me.modmuss50.mod-publish-plugin" version "0.7.+"
     id "com.github.johnrengelman.shadow" version "8.1.+" apply false
 }
-
-apply plugin: "me.modmuss50.mod-publish-plugin"
 
 architectury.minecraft = minecraft_version
 
@@ -17,8 +15,9 @@ Map<String, String> modProperties() {
     ]
 }
 
-import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import net.fabricmc.loom.task.AbstractRemapJarTask
 
 subprojects {
     apply plugin: "dev.architectury.loom"
@@ -33,7 +32,6 @@ subprojects {
 
     processResources {
         def properties = modProperties()
-
         inputs.properties properties
 
         filesMatching(["META-INF/*mods.toml", "fabric.mod.json", "pack.mcmeta"]) {
@@ -46,6 +44,10 @@ subprojects {
                 it.text = JsonOutput.toJson(new JsonSlurper().parse(it))
             }
         }
+    }
+
+    tasks.withType(AbstractRemapJarTask).configureEach {
+        archiveAppendix = project.name
     }
 }
 
@@ -89,15 +91,15 @@ publishMods {
 
     def fabric = publishOptions {
         file = fabricJar
-        additionalFiles.from forgeSources
+        additionalFiles.from fabricSources
         version = project.version + "-fabric"
-        displayName = "[Fabric 1.16-1.20.4] $display_name $project.version"
+        displayName = "[Fabric 1.16-1.20.4] $display_name $version"
         modLoaders.addAll "fabric", "quilt"
     }
 
     def forge = publishOptions {
         file = forgeJar
-        additionalFiles.from fabricSources
+        additionalFiles.from forgeSources
         version = project.version + "-forge"
         displayName = "[Forge 1.17-1.20.4] $display_name $version"
         modLoaders.add "forge"
@@ -114,7 +116,6 @@ publishMods {
         accessToken = providers.environmentVariable('MODRINTH_TOKEN')
         dryRun = !accessToken.present
         projectId = modrinth_id
-        version
     }
 
     def curseOptions = curseforgeOptions {
