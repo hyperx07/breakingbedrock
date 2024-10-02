@@ -69,19 +69,22 @@ tasks.withType(Jar).configureEach {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
+    destinationDirectory.set destinationDirectory.dir('../devlibs').get()
+    exclude "architectury_inject*/**"
 }
 
 remapJar {
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set 'neoforge'
 }
 
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-    archiveClassifier.set archiveClassifier.get() + '-neoforge'
+    println archiveClassifier.get()
+    archiveAppendix.set 'fabric'
+    println archiveFileName.get()
 }
 
 components.java {

@@ -17,8 +17,9 @@ Map<String, String> modProperties() {
     ]
 }
 
-import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import net.fabricmc.loom.task.AbstractRemapJarTask
 
 subprojects {
     apply plugin: "dev.architectury.loom"
@@ -47,8 +48,8 @@ subprojects {
         }
     }
 
-    tasks.withType(Jar).configureEach {
-        exclude "architectury_inject*/PlatformMethods.class"
+    tasks.withType(AbstractRemapJarTask).configureEach {
+        archiveAppendix = project.name
     }
 }
 

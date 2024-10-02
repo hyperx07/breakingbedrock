@@ -57,11 +57,11 @@ dependencies {
 
 //fabricApi.configureDataGeneration()
 //sourceSets.main.resources.exclude 'src/main/generated/.cache/*'
-
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-import net.fabricmc.loom.task.RemapJarTask
-
+//
+//import groovy.json.JsonOutput
+//import groovy.json.JsonSlurper
+//import net.fabricmc.loom.task.RemapJarTask
+//
 //tasks.withType(RemapJarTask).configureEach {
 //    exclude "net/anawesomguy/breakingbedrock/fabric/data/**"
 //
@@ -80,20 +80,19 @@ import net.fabricmc.loom.task.RemapJarTask
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
+    destinationDirectory.set destinationDirectory.dir('../devlibs').get()
+    exclude "architectury_inject*/**"
 }
 
 remapJar {
-    injectAccessWidener = true
     inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set('fabric')
 }
 
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-    archiveClassifier.set archiveClassifier.get() + '-fabric'
 }
 
 components.java {
