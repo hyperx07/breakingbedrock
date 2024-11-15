@@ -32,8 +32,8 @@ public final class BreakingBedrock {
                    resist = temp.getProperty("explosion_resist"),
                    level = temp.getProperty("mining_level");
             if (time == null || !((destroyTime = Float.parseFloat(time)) > -1) || destroyTime == Float.POSITIVE_INFINITY) {
-                properties.setProperty("destroy_time", "100");
-                destroyTime = 100F;
+                properties.setProperty("destroy_time", "1.5");
+                destroyTime = 1.5F;
                 LOGGER.debug("Correcting invalid config value {}!", time);
             } else properties.setProperty("destroy_time", time);
             if (resist == null || !((explosionResist = Float.parseFloat(resist)) > 0) || explosionResist == Float.POSITIVE_INFINITY) {
@@ -42,18 +42,18 @@ public final class BreakingBedrock {
                 LOGGER.debug("Correcting invalid config value {}!", resist);
             } else properties.setProperty("explosion_resist", resist);
             if (level == null || !((miningLevel = Integer.parseInt(level)) > 0)) {
-                properties.setProperty("mining_level", "4");
-                miningLevel = 4;
+                properties.setProperty("mining_level", "3");
+                miningLevel = 3;
                 LOGGER.debug("Correcting invalid config value {}!", level);
             } else properties.setProperty("mining_level", level);
         } catch (IOException | IllegalArgumentException e) {
             LOGGER.info("Couldn't read config file (likely corrupted or missing)! Attempting to (re)create it.");
-            properties.setProperty("destroy_time", "100");
+            properties.setProperty("destroy_time", "1.5");
             properties.setProperty("explosion_resist", "3600000");
-            properties.setProperty("mining_level", "4");
-            destroyTime = 100F;
+            properties.setProperty("mining_level", "3");
+            destroyTime = 1.5F;
             explosionResist = 3600000F;
-            miningLevel = 4;
+            miningLevel = 3;
         }
 
         EXPLOSION_RESIST = explosionResist;
